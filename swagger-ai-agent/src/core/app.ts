@@ -7,6 +7,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import { indexRouter } from '../api/routes/index';
 import { specRouter } from '../api/routes/spec.routes';
 import { environmentRouter } from '../api/routes/environment.routes';
+import { executionRouter } from '../api/routes/execution.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -26,6 +27,7 @@ export function createApp(): Application {
   app.use('/api', indexRouter);
   app.use('/api/spec', specRouter);
   app.use('/api', environmentRouter);
+  app.use('/api', executionRouter);
 
   // Phase 2+ route mounts will be added here as:
   // app.use('/api/spec', specRouter);

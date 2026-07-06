@@ -114,3 +114,38 @@
 {"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T13:57:29.318Z","url":"http://localhost:3000/api/health"}
 {"contentLength":"119","durationMs":"1463.88","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T13:57:32.046Z","url":"/api/spec/import"}
 {"contentLength":"322","durationMs":"1.24","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T13:57:32.091Z","url":"/api/environment"}
+{"contentLength":"209","durationMs":"1.26","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T13:58:26.367Z","url":"/api/environment"}
+{"contentLength":"209","durationMs":"0.80","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T13:58:27.960Z","url":"/api/environment"}
+{"contentLength":"209","durationMs":"0.60","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T13:59:13.315Z","url":"/api/environment"}
+{"contentLength":"209","durationMs":"0.58","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T13:59:14.878Z","url":"/api/environment"}
+{"contentLength":"78","durationMs":"0.72","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:00:29.184Z","url":"/api/health"}
+{"contentLength":"119","durationMs":"1088.70","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:00:37.689Z","url":"/api/spec/import"}
+{"contentLength":"322","durationMs":"0.64","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:00:44.239Z","url":"/api/environment"}
+{"contentLength":"179","durationMs":"0.51","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:02:01.020Z","url":"/api/environment"}
+{"contentLength":"179","durationMs":"0.55","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:02:04.194Z","url":"/api/environment"}
+{"contentLength":"119","durationMs":"995.97","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:02:16.561Z","url":"/api/spec/import"}
+{"contentLength":"322","durationMs":"0.56","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:02:25.049Z","url":"/api/environment"}
+{"contentLength":"324","durationMs":"0.95","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:03:35.183Z","url":"/api/spec/spec-5236518f-e0dd-4e65-9c72-271961ef30bc/environments"}
+{"contentLength":"322","durationMs":"0.86","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:05:05.760Z","url":"/api/environment/env-1f7a40b3-0fdf-4463-bbdf-3e757f9da109"}
+{"contentLength":"112","durationMs":"0.76","level":"http","message":"Incoming request","method":"GET","status":404,"timestamp":"2026-07-06T14:06:51.816Z","url":"/api/environment/PASTE_ENV_ID_HERE"}
+{"contentLength":"348","durationMs":"1.27","level":"http","message":"Incoming request","method":"PUT","status":200,"timestamp":"2026-07-06T14:07:49.639Z","url":"/api/environment/env-1f7a40b3-0fdf-4463-bbdf-3e757f9da109"}
+{"contentLength":"-","durationMs":"0.48","level":"http","message":"Incoming request","method":"DELETE","status":204,"timestamp":"2026-07-06T14:09:44.008Z","url":"/api/environment/env-1f7a40b3-0fdf-4463-bbdf-3e757f9da109"}
+{"contentLength":"180","durationMs":"0.80","level":"http","message":"Incoming request","method":"GET","status":400,"timestamp":"2026-07-06T14:10:28.825Z","url":"/api/spec/env-1f7a40b3-0fdf-4463-bbdf-3e757f9da109/environments"}
+{"contentLength":"2","durationMs":"0.35","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:10:43.811Z","url":"/api/spec/spec-5236518f-e0dd-4e65-9c72-271961ef30bc/environments"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:27:18.716Z","url":"http://localhost:3000/api/health"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:27:45.496Z","url":"http://localhost:3000/api/health"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:30:05.197Z","url":"http://localhost:3000/api/health"}
+{"contentLength":"119","durationMs":"1427.46","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:30:07.113Z","url":"/api/spec/import"}
+{"contentLength":"322","durationMs":"2.16","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:30:07.124Z","url":"/api/environment"}
+{"contentLength":"155","durationMs":"4.87","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:30:07.131Z","url":"/api/execution/plan"}
+{"contentLength":"138","durationMs":"2.64","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:30:07.140Z","url":"/api/execution/status/run-8984fc02-6cb1-476d-9a36-8c047358fac2"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:30:58.131Z","url":"http://localhost:3000/api/health"}
+{"contentLength":"206","durationMs":"18.69","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:34:49.258Z","url":"/api/execution/plan"}
+{"contentLength":"119","durationMs":"1938.61","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:34:57.969Z","url":"/api/spec/import"}
+{"contentLength":"191","durationMs":"3.22","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:35:06.222Z","url":"/api/execution/plan"}
+{"contentLength":"119","durationMs":"1347.43","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:39:37.568Z","url":"/api/spec/import"}
+{"contentLength":"191","durationMs":"1.79","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:39:48.549Z","url":"/api/execution/plan"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:41:36.839Z","url":"http://localhost:3000/api/health"}
+{"contentLength":"206","durationMs":"12.34","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:41:42.695Z","url":"/api/execution/plan"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:42:30.104Z","url":"http://localhost:3000/api/health"}
+{"level":"info","message":"Received SIGINT — shutting down gracefully","timestamp":"2026-07-06T14:42:46.037Z"}
