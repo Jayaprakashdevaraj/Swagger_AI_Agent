@@ -1,0 +1,206 @@
+{
+  "info": {
+    "name": "Swagger AI Agent - Phase 1 to 5",
+    "description": "Manual validation collection for health, spec APIs, and environment APIs up to Phase 5.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Phase 1 - Health",
+      "item": [
+        {
+          "name": "GET /api/health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 4 - Spec APIs",
+      "item": [
+        {
+          "name": "POST /api/spec/import (url)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.expect(json.specId).to.exist;",
+                  "pm.collectionVariables.set('specId', json.specId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"url\",\n    \"url\": \"https://petstore.swagger.io/v2/swagger.json\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/spec/import",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "spec", "import"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/spec/validate (specId)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/spec/validate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "spec", "validate"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/spec/:specId",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/spec/{{specId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "spec", "{{specId}}"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/spec/:specId/operations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/spec/{{specId}}/operations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "spec", "{{specId}}", "operations"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/spec/:specId/tags",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/spec/{{specId}}/tags",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "spec", "{{specId}}", "tags"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 5 - Environment APIs",
+      "item": [
+        {
+          "name": "POST /api/environment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.expect(json.id).to.exist;",
+                  "pm.collectionVariables.set('envId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"name\": \"qa\",\n  \"baseUrl\": \"https://qa.api.example.com\",\n  \"defaultHeaders\": {\n    \"x-app\": \"swagger-ai-agent\"\n  },\n  \"authConfig\": {\n    \"type\": \"none\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/environment",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "environment"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/spec/:specId/environments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/spec/{{specId}}/environments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "spec", "{{specId}}", "environments"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/environment/:envId",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/environment/{{envId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "environment", "{{envId}}"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/environment/:envId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"baseUrl\": \"https://stage.api.example.com\",\n  \"authConfig\": {\n    \"type\": \"bearer\",\n    \"token\": \"demo-token\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/environment/{{envId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "environment", "{{envId}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/environment/:envId",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/environment/{{envId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "environment", "{{envId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "specId", "value": "" },
+    { "key": "envId", "value": "" }
+  ]
+}

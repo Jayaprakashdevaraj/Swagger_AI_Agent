@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd \"c:\\\\Users\\\\JAYAPRAKASH\\\\Downloads\\\\Swagger\\\\Swagger AI Agent\\\\swagger-ai-agent\"; npm install$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
