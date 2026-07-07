@@ -149,3 +149,37 @@
 {"contentLength":"206","durationMs":"12.34","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:41:42.695Z","url":"/api/execution/plan"}
 {"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:42:30.104Z","url":"http://localhost:3000/api/health"}
 {"level":"info","message":"Received SIGINT — shutting down gracefully","timestamp":"2026-07-06T14:42:46.037Z"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:42:55.684Z","url":"http://localhost:3000/api/health"}
+{"contentLength":"206","durationMs":"15.05","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:43:06.132Z","url":"/api/execution/plan"}
+{"contentLength":"206","durationMs":"4.02","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:43:08.614Z","url":"/api/execution/plan"}
+{"contentLength":"206","durationMs":"1.35","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-06T14:43:31.169Z","url":"/api/execution/plan"}
+{"contentLength":"119","durationMs":"2258.73","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:43:58.710Z","url":"/api/spec/import"}
+{"contentLength":"26","durationMs":"3.59","level":"http","message":"Incoming request","method":"POST","status":200,"timestamp":"2026-07-06T14:44:06.321Z","url":"/api/spec/validate"}
+{"contentLength":"78","durationMs":"3.52","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:44:37.799Z","url":"/api/health"}
+{"contentLength":"119","durationMs":"1259.83","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:44:39.146Z","url":"/api/spec/import"}
+{"contentLength":"26","durationMs":"2.04","level":"http","message":"Incoming request","method":"POST","status":200,"timestamp":"2026-07-06T14:44:39.331Z","url":"/api/spec/validate"}
+{"contentLength":"26","durationMs":"332.47","level":"http","message":"Incoming request","method":"POST","status":200,"timestamp":"2026-07-06T14:44:39.736Z","url":"/api/spec/validate"}
+{"contentLength":"408","durationMs":"3.29","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:44:39.818Z","url":"/api/spec/spec-65b78977-0e92-4aa8-90fc-76f86015ae41"}
+{"contentLength":"129","durationMs":"2.58","level":"http","message":"Incoming request","method":"GET","status":404,"timestamp":"2026-07-06T14:44:39.879Z","url":"/api/spec/spec-2590e37b-f544-458a-a351-290d06cd1771/operations"}
+{"contentLength":"129","durationMs":"1.10","level":"http","message":"Incoming request","method":"GET","status":404,"timestamp":"2026-07-06T14:44:39.915Z","url":"/api/spec/spec-2590e37b-f544-458a-a351-290d06cd1771/tags"}
+{"contentLength":"322","durationMs":"4.01","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:44:39.988Z","url":"/api/environment"}
+{"contentLength":"155","durationMs":"5.52","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:45:49.179Z","url":"/api/execution/plan"}
+{"contentLength":"155","durationMs":"1.64","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-06T14:48:17.231Z","url":"/api/execution/plan"}
+{"contentLength":"138","durationMs":"3.48","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-06T14:49:42.869Z","url":"/api/execution/status/run-601c1809-5c8f-4313-ae89-39259ccf8abb"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-06T14:52:25.825Z","url":"http://localhost:3000/api/health"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-07T14:57:35.581Z","url":"http://localhost:3000/api/health"}
+{"contentLength":"153","durationMs":"16.17","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-07T14:57:35.735Z","url":"/api/environment"}
+{"contentLength":"153","durationMs":"2.86","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-07T14:57:35.791Z","url":"/api/execution/plan"}
+{"contentLength":"216","durationMs":"1.72","level":"http","message":"Incoming request","method":"POST","status":400,"timestamp":"2026-07-07T14:57:35.821Z","url":"/api/execution/run"}
+{"contentLength":160,"durationMs":"5.38","level":"http","message":"Incoming request","method":"GET","status":404,"timestamp":"2026-07-07T14:57:35.856Z","url":"/api/execution/status/"}
+{"env":"development","level":"info","message":"Swagger AI Agent started","port":3000,"timestamp":"2026-07-07T15:09:05.548Z","url":"http://localhost:3000/api/health"}
+{"contentLength":"78","durationMs":"14.76","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-07T15:09:05.602Z","url":"/api/health"}
+{"contentLength":"119","durationMs":"1962.87","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-07T15:09:07.659Z","url":"/api/spec/import"}
+{"contentLength":"326","durationMs":"5.94","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-07T15:09:07.675Z","url":"/api/environment"}
+{"contentLength":"153","durationMs":"3.16","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-07T15:09:07.683Z","url":"/api/execution/plan"}
+{"contentLength":"142","durationMs":"700.89","level":"http","message":"Incoming request","method":"POST","status":200,"timestamp":"2026-07-07T15:09:08.395Z","url":"/api/execution/run"}
+{"contentLength":"2890","durationMs":"3.06","level":"http","message":"Incoming request","method":"GET","status":200,"timestamp":"2026-07-07T15:09:08.500Z","url":"/api/execution/status/run-001ce52d-9093-4b37-9da8-76a07a295b3c"}
+{"contentLength":"119","durationMs":"2225.91","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-07T15:20:03.604Z","url":"/api/spec/import"}
+{"contentLength":"322","durationMs":"4.88","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-07T15:20:20.775Z","url":"/api/environment"}
+{"contentLength":"155","durationMs":"13.04","level":"http","message":"Incoming request","method":"POST","status":201,"timestamp":"2026-07-07T15:21:03.836Z","url":"/api/execution/plan"}
+{"contentLength":"144","durationMs":"1000.25","level":"http","message":"Incoming request","method":"POST","status":200,"timestamp":"2026-07-07T15:23:37.427Z","url":"/api/execution/run"}

@@ -27,6 +27,7 @@ export class AxiosClient {
       params: config.params,
       data: config.data,
       timeout: config.timeoutMs,
+      validateStatus: () => true,
     });
   }
 }

@@ -55,3 +55,34 @@ export function validatePlanExecutionRequest(body: unknown): ValidationIssue[] {
 
   return issues;
 }
+
+export function validateExecuteRunRequest(body: unknown): ValidationIssue[] {
+  if (!isObject(body)) {
+    return [{ field: 'body', message: 'Body must be a JSON object' }];
+  }
+
+  const record = body as Record<string, unknown>;
+  const hasRunId = typeof record.runId === 'string' && record.runId.trim() !== '';
+  const hasPlanParams =
+    typeof record.specId === 'string' &&
+    record.specId.trim() !== '' &&
+    typeof record.envName === 'string' &&
+    record.envName.trim() !== '' &&
+    typeof record.selection === 'object' &&
+    record.selection !== null;
+
+  if (!hasRunId && !hasPlanParams) {
+    return [
+      {
+        field: 'runId|specId|envName|selection',
+        message: 'Provide either runId or all of specId, envName, selection',
+      },
+    ];
+  }
+
+  if (hasRunId) {
+    return [];
+  }
+
+  return validatePlanExecutionRequest(body as unknown as PlanExecutionRequestDto);
+}

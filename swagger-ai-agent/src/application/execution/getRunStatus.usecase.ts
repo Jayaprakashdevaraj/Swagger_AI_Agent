@@ -1,4 +1,5 @@
 import { NotFoundError } from '../../core/errors/NotFoundError';
+import { RunReport } from '../../domain/models/RunReport';
 import { RunPlanRepository } from '../../domain/repositories/RunPlanRepository';
 
 export interface RunStatusOutput {
@@ -9,6 +10,7 @@ export interface RunStatusOutput {
   passed: number;
   failed: number;
   errors: number;
+  report?: RunReport;
 }
 
 export class GetRunStatusUseCase {
@@ -30,6 +32,7 @@ export class GetRunStatusUseCase {
       passed: report?.summary.passed ?? 0,
       failed: report?.summary.failed ?? 0,
       errors: report?.summary.errors ?? 0,
+      report,
     };
   }
 }
