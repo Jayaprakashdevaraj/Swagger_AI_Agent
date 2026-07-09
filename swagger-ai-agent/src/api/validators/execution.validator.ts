@@ -86,3 +86,16 @@ export function validateExecuteRunRequest(body: unknown): ValidationIssue[] {
 
   return validatePlanExecutionRequest(body as unknown as PlanExecutionRequestDto);
 }
+
+export function validateRetryFailedRequest(body: unknown): ValidationIssue[] {
+  if (!isObject(body)) {
+    return [{ field: 'body', message: 'Body must be a JSON object' }];
+  }
+
+  const runId = (body as Record<string, unknown>).runId;
+  if (typeof runId !== 'string' || runId.trim() === '') {
+    return [{ field: 'runId', message: 'runId is required' }];
+  }
+
+  return [];
+}

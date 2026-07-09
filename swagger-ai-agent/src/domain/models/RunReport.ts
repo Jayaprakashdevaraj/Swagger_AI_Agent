@@ -42,11 +42,26 @@ export interface RunReportSummary {
   durationMs: number;
 }
 
+export interface AggregateSummary {
+  total: number;
+  passed: number;
+  failed: number;
+  errors: number;
+  skipped: number;
+}
+
+export interface RunReportAggregates {
+  byTag: Record<string, AggregateSummary>;
+  byMethod: Record<string, AggregateSummary>;
+  byPath: Record<string, AggregateSummary>;
+}
+
 export interface RunReport {
   runId: string;
   specId: string;
   envName: string;
   summary: RunReportSummary;
+  aggregates?: RunReportAggregates;
   results: TestResult[];
   /** ISO timestamps. */
   startedAt: string;

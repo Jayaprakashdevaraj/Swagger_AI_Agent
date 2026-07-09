@@ -10,6 +10,7 @@ import { environmentRouter } from '../api/routes/environment.routes';
 import { executionRouter } from '../api/routes/execution.routes';
 import { testgenRouter } from '../api/routes/testgen.routes';
 import { llmRouter } from '../api/routes/llm.routes';
+import { mcpRouter } from '../api/routes/mcp.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -32,6 +33,7 @@ export function createApp(): Application {
   app.use('/api', executionRouter);
   app.use('/api', testgenRouter);
   app.use('/api', llmRouter);
+  app.use('/api', mcpRouter);
 
   // Phase 2+ route mounts will be added here as:
   // app.use('/api/spec', specRouter);
