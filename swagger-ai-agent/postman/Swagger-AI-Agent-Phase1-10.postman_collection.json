@@ -1,0 +1,271 @@
+{
+  "info": {
+    "name": "Swagger AI Agent - Phase 1 to 10",
+    "description": "Manual validation collection for APIs implemented through Phase 10.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 Health",
+      "item": [
+        {
+          "name": "GET /api/health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Spec",
+      "item": [
+        {
+          "name": "POST /api/spec/import",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('status is 201', function(){ pm.response.to.have.status(201); });",
+                "const json = pm.response.json();",
+                "pm.collectionVariables.set('specId', json.specId);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"source\": {\n    \"type\": \"url\",\n    \"url\": \"https://petstore.swagger.io/v2/swagger.json\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/api/spec/import", "host": ["{{baseUrl}}"], "path": ["api", "spec", "import"] }
+          }
+        },
+        {
+          "name": "POST /api/spec/validate",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"specId\": \"{{specId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/spec/validate", "host": ["{{baseUrl}}"], "path": ["api", "spec", "validate"] }
+          }
+        },
+        {
+          "name": "GET /api/spec/:specId/operations",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('status is 200', function(){ pm.response.to.have.status(200); });",
+                "const ops = pm.response.json();",
+                "pm.test('operations list is not empty', function(){ pm.expect(Array.isArray(ops)).to.eql(true); pm.expect(ops.length).to.be.above(0); });",
+                "const chosen = ops.find(o => o && o.operationId === 'getPetById') || ops[0];",
+                "pm.collectionVariables.set('singleOperationId', chosen.operationId);",
+                "pm.collectionVariables.set('operationId', chosen.operationId);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/spec/{{specId}}/operations", "host": ["{{baseUrl}}"], "path": ["api", "spec", "{{specId}}", "operations"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Environment",
+      "item": [
+        {
+          "name": "POST /api/environment",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('status is 201', function(){ pm.response.to.have.status(201); });",
+                "const json = pm.response.json();",
+                "pm.collectionVariables.set('envId', json.id);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"name\": \"qa\",\n  \"baseUrl\": \"https://petstore.swagger.io/v2\",\n  \"defaultHeaders\": {\n    \"x-app\": \"swagger-ai-agent\"\n  },\n  \"authConfig\": {\n    \"type\": \"none\"\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/environment", "host": ["{{baseUrl}}"], "path": ["api", "environment"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Planning and Execution",
+      "item": [
+        {
+          "name": "POST /api/execution/plan",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('status is 201', function(){ pm.response.to.have.status(201); });",
+                "const json = pm.response.json();",
+                "pm.collectionVariables.set('runId', json.runId);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"envName\": \"qa\",\n  \"selection\": {\n    \"mode\": \"single\",\n    \"operationIds\": [\"{{singleOperationId}}\"]\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/api/execution/plan", "host": ["{{baseUrl}}"], "path": ["api", "execution", "plan"] }
+          }
+        },
+        {
+          "name": "POST /api/execution/run",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"runId\": \"{{runId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/execution/run", "host": ["{{baseUrl}}"], "path": ["api", "execution", "run"] }
+          }
+        },
+        {
+          "name": "GET /api/execution/status/:runId",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/execution/status/{{runId}}", "host": ["{{baseUrl}}"], "path": ["api", "execution", "status", "{{runId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Test Generation (Phase 8)",
+      "item": [
+        {
+          "name": "POST /api/testgen/generate-axios-tests",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"selection\": {\n    \"mode\": \"single\",\n    \"operationIds\": [\"{{singleOperationId}}\"]\n  },\n  \"options\": {\n    \"includeNegativeTests\": true,\n    \"includeAuthTests\": true,\n    \"includeBoundaryTests\": true\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/testgen/generate-axios-tests", "host": ["{{baseUrl}}"], "path": ["api", "testgen", "generate-axios-tests"] }
+          }
+        },
+        {
+          "name": "GET /api/testgen/spec/:specId/preview",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/testgen/spec/{{specId}}/preview", "host": ["{{baseUrl}}"], "path": ["api", "testgen", "spec", "{{specId}}", "preview"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 LLM Payload Builder (Phase 9)",
+      "item": [
+        {
+          "name": "POST /api/llm/build-payload",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"operationId\": \"{{operationId}}\",\n  \"mode\": \"schema-with-llm\",\n  \"hints\": {\n    \"locale\": \"IN\",\n    \"domain\": \"banking\"\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/llm/build-payload", "host": ["{{baseUrl}}"], "path": ["api", "llm", "build-payload"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 MCP Swagger Tools (Phase 10)",
+      "item": [
+        {
+          "name": "POST /api/mcp/swagger/list-operations",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('status is 200', function(){ pm.response.to.have.status(200); });",
+                "const json = pm.response.json();",
+                "pm.test('operation list response shape', function(){ pm.expect(Array.isArray(json.operations)).to.eql(true); pm.expect(json.operationCount).to.be.a('number'); });",
+                "if (Array.isArray(json.operations) && json.operations.length > 0) { pm.collectionVariables.set('operationId', json.operations[0].operationId); pm.collectionVariables.set('singleOperationId', json.operations[0].operationId); }"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/mcp/swagger/list-operations", "host": ["{{baseUrl}}"], "path": ["api", "mcp", "swagger", "list-operations"] }
+          }
+        },
+        {
+          "name": "POST /api/mcp/swagger/plan-run",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('status is 200', function(){ pm.response.to.have.status(200); });",
+                "const json = pm.response.json();",
+                "pm.collectionVariables.set('mcpRunId', json.runId);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"envName\": \"qa\",\n  \"selection\": {\n    \"mode\": \"single\",\n    \"operationIds\": [\"{{singleOperationId}}\"]\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/mcp/swagger/plan-run", "host": ["{{baseUrl}}"], "path": ["api", "mcp", "swagger", "plan-run"] }
+          }
+        },
+        {
+          "name": "POST /api/mcp/swagger/execute-operation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"envName\": \"qa\",\n  \"operationId\": \"{{operationId}}\",\n  \"overrides\": {\n    \"query\": {\n      \"status\": \"available\"\n    }\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/mcp/swagger/execute-operation", "host": ["{{baseUrl}}"], "path": ["api", "mcp", "swagger", "execute-operation"] }
+          }
+        },
+        {
+          "name": "POST /api/mcp/swagger/generate-axios-tests",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specId\": \"{{specId}}\",\n  \"selection\": {\n    \"mode\": \"single\",\n    \"operationIds\": [\"{{singleOperationId}}\"]\n  },\n  \"options\": {\n    \"includeNegativeTests\": true,\n    \"includeAuthTests\": true,\n    \"includeBoundaryTests\": true\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/mcp/swagger/generate-axios-tests", "host": ["{{baseUrl}}"], "path": ["api", "mcp", "swagger", "generate-axios-tests"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "specId", "value": "" },
+    { "key": "envId", "value": "" },
+    { "key": "runId", "value": "" },
+    { "key": "singleOperationId", "value": "getPetById" },
+    { "key": "operationId", "value": "getPetById" },
+    { "key": "mcpRunId", "value": "" }
+  ]
+}

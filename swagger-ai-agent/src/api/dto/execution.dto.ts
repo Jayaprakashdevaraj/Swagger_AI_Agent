@@ -41,8 +41,31 @@ export interface RunStatusResponseDto {
       durationMs?: number;
       errorMessage?: string;
     }>;
+    aggregates?: {
+      byTag: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }>;
+      byMethod: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }>;
+      byPath: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }>;
+    };
     startedAt: string;
     completedAt?: string;
+  };
+}
+
+export interface RetryFailedRequestDto {
+  runId: string;
+}
+
+export interface RetryFailedResponseDto {
+  originalRunId: string;
+  retryRunId: string;
+  retriedTestCount: number;
+  status: string;
+  summary: {
+    total: number;
+    passed: number;
+    failed: number;
+    errors: number;
+    durationMs: number;
   };
 }
 

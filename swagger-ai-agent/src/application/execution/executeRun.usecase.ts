@@ -1,5 +1,6 @@
 import { ValidationError } from '../../core/errors/ValidationError';
 import { EnvironmentConfig } from '../../domain/models/EnvironmentConfig';
+import { Operation } from '../../domain/models/Operation';
 import { RunReport, TestResult } from '../../domain/models/RunReport';
 import { RunSelection } from '../../domain/models/RunPlan';
 import { EnvironmentRepository } from '../../domain/repositories/EnvironmentRepository';
@@ -160,6 +161,7 @@ export class ExecuteRunUseCase {
       specId: runPlan.specId,
       envName: runPlan.envName,
       summary,
+      aggregates: this.buildAggregates(spec.operations, results),
       results,
       startedAt: runPlan.startedAt ?? new Date(startedAtMs).toISOString(),
       completedAt: new Date().toISOString(),
@@ -193,5 +195,48 @@ export class ExecuteRunUseCase {
     }
 
     return environment;
+  }
+
+  private buildAggregates(operations: Operation[], results: TestResult[]): RunReport['aggregates'] {
+    const byTag: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }> = {};
+    const byMethod: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }> = {};
+    const byPath: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }> = {};
+
+    const operationMap = new Map(operations.map((operation) => [operation.id, operation]));
+
+    const ensureBucket = (target: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }>, key: string) => {
+      if (!target[key]) {
+        target[key] = { total: 0, passed: 0, failed: 0, errors: 0, skipped: 0 };
+      }
+      return target[key];
+    };
+
+    const bump = (
+      target: Record<string, { total: number; passed: number; failed: number; errors: number; skipped: number }>,
+      key: string,
+      status: TestResult['status']
+    ) => {
+      const bucket = ensureBucket(target, key);
+      bucket.total += 1;
+      if (status === 'passed') bucket.passed += 1;
+      if (status === 'failed') bucket.failed += 1;
+      if (status === 'error') bucket.errors += 1;
+      if (status === 'skipped') bucket.skipped += 1;
+    };
+
+    for (const result of results) {
+      const operation = operationMap.get(result.operationId);
+      const method = operation?.method ?? 'UNKNOWN';
+      const path = operation?.path ?? 'UNKNOWN';
+      const tags = operation?.tags.length ? operation.tags : ['untagged'];
+
+      bump(byMethod, method, result.status);
+      bump(byPath, path, result.status);
+      for (const tag of tags) {
+        bump(byTag, tag, result.status);
+      }
+    }
+
+    return { byTag, byMethod, byPath };
   }
 }

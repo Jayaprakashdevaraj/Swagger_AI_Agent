@@ -3,9 +3,14 @@ import { repositoryRegistry } from '../../infrastructure/persistence/RepositoryR
 import { PlanRunUseCase } from '../../application/execution/planRun.usecase';
 import { GetRunStatusUseCase } from '../../application/execution/getRunStatus.usecase';
 import { ExecuteRunUseCase } from '../../application/execution/executeRun.usecase';
+import { RetryFailedTestUseCase } from '../../application/execution/retryFailedTest.usecase';
 import { ExecutionController } from '../controllers/execution.controller';
 import { validateRequest } from '../../core/middlewares/validateRequest';
-import { validateExecuteRunRequest, validatePlanExecutionRequest } from '../validators/execution.validator';
+import {
+  validateExecuteRunRequest,
+  validatePlanExecutionRequest,
+  validateRetryFailedRequest,
+} from '../validators/execution.validator';
 import { AxiosClient } from '../../infrastructure/http/AxiosClient';
 import { AxiosExecutionAdapter } from '../../infrastructure/http/AxiosExecutionAdapter';
 
@@ -24,17 +29,20 @@ const executeRunUseCase = new ExecuteRunUseCase(
   planRunUseCase,
   axiosExecutionAdapter
 );
+const retryFailedTestUseCase = new RetryFailedTestUseCase(repositoryRegistry.runPlanRepository, executeRunUseCase);
 
 const executionController = new ExecutionController(
   planRunUseCase,
   getRunStatusUseCase,
-  executeRunUseCase
+  executeRunUseCase,
+  retryFailedTestUseCase
 );
 
 const router = Router();
 
 router.post('/execution/plan', validateRequest(validatePlanExecutionRequest), executionController.planRun);
 router.post('/execution/run', validateRequest(validateExecuteRunRequest), executionController.executeRun);
+router.post('/execution/retry-failed', validateRequest(validateRetryFailedRequest), executionController.retryFailed);
 router.get('/execution/status/:runId', executionController.getRunStatus);
 
 export { router as executionRouter };

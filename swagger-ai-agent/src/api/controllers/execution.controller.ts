@@ -3,11 +3,14 @@ import { ValidationError } from '../../core/errors/ValidationError';
 import { PlanRunUseCase } from '../../application/execution/planRun.usecase';
 import { GetRunStatusUseCase } from '../../application/execution/getRunStatus.usecase';
 import { ExecuteRunUseCase } from '../../application/execution/executeRun.usecase';
+import { RetryFailedTestUseCase } from '../../application/execution/retryFailedTest.usecase';
 import {
   ExecuteRunRequestDto,
   ExecuteRunResponseDto,
   PlanExecutionRequestDto,
   PlanExecutionResponseDto,
+  RetryFailedRequestDto,
+  RetryFailedResponseDto,
   RunStatusResponseDto,
 } from '../dto/execution.dto';
 
@@ -15,7 +18,8 @@ export class ExecutionController {
   constructor(
     private readonly planRunUseCase: PlanRunUseCase,
     private readonly getRunStatusUseCase: GetRunStatusUseCase,
-    private readonly executeRunUseCase: ExecuteRunUseCase
+    private readonly executeRunUseCase: ExecuteRunUseCase,
+    private readonly retryFailedTestUseCase: RetryFailedTestUseCase
   ) {}
 
   planRun = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -80,6 +84,25 @@ export class ExecutionController {
         failed: output.failed,
         errors: output.errors,
         report: output.report,
+      };
+
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  retryFailed = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const body = req.body as RetryFailedRequestDto;
+      const output = await this.retryFailedTestUseCase.execute({ runId: body.runId });
+
+      const response: RetryFailedResponseDto = {
+        originalRunId: output.originalRunId,
+        retryRunId: output.retryRunId,
+        retriedTestCount: output.retriedTestCount,
+        status: output.status,
+        summary: output.summary,
       };
 
       res.status(200).json(response);
