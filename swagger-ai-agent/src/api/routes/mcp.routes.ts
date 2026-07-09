@@ -12,6 +12,7 @@ import { PlanApiRunTool } from '../../infrastructure/mcp/swagger/tools/planApiRu
 import { ExecuteOperationTool } from '../../infrastructure/mcp/swagger/tools/executeOperation.tool';
 import { GenerateAxiosTestsTool } from '../../infrastructure/mcp/swagger/tools/generateAxiosTests.tool';
 import { SwaggerMcpController } from '../controllers/mcp/swaggerMcp.controller';
+import { config } from '../../core/config';
 import {
   validateMcpExecuteOperationRequest,
   validateMcpGenerateAxiosTestsRequest,
@@ -25,7 +26,11 @@ const planRunUseCase = new PlanRunUseCase(
   repositoryRegistry.environmentRepository,
   repositoryRegistry.runPlanRepository
 );
-const axiosClient = new AxiosClient();
+const axiosClient = new AxiosClient(undefined, {
+  timeoutMs: config.http.externalTimeoutMs,
+  retries: config.http.externalRetries,
+  retryDelayMs: config.http.externalRetryDelayMs,
+});
 const axiosExecutionAdapter = new AxiosExecutionAdapter(axiosClient);
 const executeRunUseCase = new ExecuteRunUseCase(
   repositoryRegistry.specRepository,

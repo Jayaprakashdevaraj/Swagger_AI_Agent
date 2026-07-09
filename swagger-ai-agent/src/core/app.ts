@@ -4,6 +4,7 @@ import cors from 'cors';
 import { config } from './config';
 import { requestLogger } from './middlewares/requestLogger';
 import { errorHandler } from './middlewares/errorHandler';
+import { createRateLimiter } from './middlewares/rateLimiter';
 import { indexRouter } from '../api/routes/index';
 import { specRouter } from '../api/routes/spec.routes';
 import { environmentRouter } from '../api/routes/environment.routes';
@@ -11,6 +12,11 @@ import { executionRouter } from '../api/routes/execution.routes';
 import { testgenRouter } from '../api/routes/testgen.routes';
 import { llmRouter } from '../api/routes/llm.routes';
 import { mcpRouter } from '../api/routes/mcp.routes';
+
+const rateLimiter = createRateLimiter({
+  windowMs: config.http.rateLimitWindowMs,
+  maxRequests: config.http.rateLimitMaxRequests,
+});
 
 export function createApp(): Application {
   const app = express();
@@ -25,6 +31,9 @@ export function createApp(): Application {
 
   // ── Request logging ───────────────────────────────────────────────────────
   app.use(requestLogger);
+
+  // ── Basic API rate limiting ───────────────────────────────────────────────
+  app.use('/api', rateLimiter);
 
   // ── Routes ────────────────────────────────────────────────────────────────
   app.use('/api', indexRouter);

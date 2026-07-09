@@ -4,6 +4,7 @@ import { SwaggerLoader } from '../../infrastructure/swagger/SwaggerLoader';
 import { SwaggerParserAdapter } from '../../infrastructure/swagger/SwaggerParserAdapter';
 import { NormalizeSpecUseCase } from './normalizeSpec.usecase';
 import { generateId } from '../../utils/idGenerator';
+import { logger } from '../../infrastructure/logging/Logger';
 
 export type SpecSource =
   | { type: 'url'; url: string }
@@ -23,18 +24,41 @@ export class IngestSwaggerUseCase {
   ) {}
 
   async execute(input: IngestSwaggerInput): Promise<NormalizedSpec> {
-    const rawContent = await this.loadRawSpec(input.source);
-    const parsed = await this.parser.parse(rawContent, true);
-
-    const specId = generateId('spec');
-    const sourceRef = this.toSourceRef(input.source);
-    const normalized = this.normalizeSpecUseCase.execute({
-      specId,
-      sourceRef,
-      parsedSpec: parsed.raw,
+    const startedAt = Date.now();
+    logger.info('Spec ingest started', {
+      sourceType: input.source.type,
+      sourceRef: this.toSourceRef(input.source),
     });
 
-    return this.specRepository.save(normalized);
+    try {
+      const rawContent = await this.loadRawSpec(input.source);
+      const parsed = await this.parser.parse(rawContent, true);
+
+      const specId = generateId('spec');
+      const sourceRef = this.toSourceRef(input.source);
+      const normalized = this.normalizeSpecUseCase.execute({
+        specId,
+        sourceRef,
+        parsedSpec: parsed.raw,
+      });
+
+      const saved = await this.specRepository.save(normalized);
+
+      logger.info('Spec ingest completed', {
+        specId: saved.id,
+        operationCount: saved.operations.length,
+        durationMs: Date.now() - startedAt,
+      });
+
+      return saved;
+    } catch (error) {
+      logger.error('Spec ingest failed', {
+        sourceType: input.source.type,
+        message: error instanceof Error ? error.message : 'Unknown ingest error',
+        durationMs: Date.now() - startedAt,
+      });
+      throw error;
+    }
   }
 
   private async loadRawSpec(source: SpecSource): Promise<string> {
