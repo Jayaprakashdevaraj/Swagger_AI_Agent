@@ -7,6 +7,12 @@ export const defaultConfig = {
   http: {
     port: 3000,
     requestSizeLimitMb: 10,
+    rateLimitWindowMs: 60_000,
+    rateLimitMaxRequests: 25,
+    specMaxSizeMb: 3,
+    externalTimeoutMs: 20_000,
+    externalRetries: 2,
+    externalRetryDelayMs: 300,
   },
   logging: {
     level: 'info',

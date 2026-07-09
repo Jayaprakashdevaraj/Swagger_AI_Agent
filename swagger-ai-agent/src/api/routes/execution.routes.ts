@@ -6,6 +6,7 @@ import { ExecuteRunUseCase } from '../../application/execution/executeRun.usecas
 import { RetryFailedTestUseCase } from '../../application/execution/retryFailedTest.usecase';
 import { ExecutionController } from '../controllers/execution.controller';
 import { validateRequest } from '../../core/middlewares/validateRequest';
+import { config } from '../../core/config';
 import {
   validateExecuteRunRequest,
   validatePlanExecutionRequest,
@@ -20,7 +21,11 @@ const planRunUseCase = new PlanRunUseCase(
   repositoryRegistry.runPlanRepository
 );
 const getRunStatusUseCase = new GetRunStatusUseCase(repositoryRegistry.runPlanRepository);
-const axiosClient = new AxiosClient();
+const axiosClient = new AxiosClient(undefined, {
+  timeoutMs: config.http.externalTimeoutMs,
+  retries: config.http.externalRetries,
+  retryDelayMs: config.http.externalRetryDelayMs,
+});
 const axiosExecutionAdapter = new AxiosExecutionAdapter(axiosClient);
 const executeRunUseCase = new ExecuteRunUseCase(
   repositoryRegistry.specRepository,

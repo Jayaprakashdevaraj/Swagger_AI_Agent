@@ -1,3 +1,5 @@
+import { logger } from '../logging/Logger';
+
 export interface PayloadBuildPrompt {
   schema: Record<string, unknown>;
   requiredFields: string[];
@@ -15,6 +17,12 @@ export interface PayloadBuildResult {
  */
 export class PayloadBuilderLlmClient {
   async buildPayload(prompt: PayloadBuildPrompt): Promise<PayloadBuildResult> {
+    const startedAt = Date.now();
+    logger.info('LLM payload build invoked', {
+      requiredFieldCount: prompt.requiredFields.length,
+      hintCount: Object.keys(prompt.hints ?? {}).length,
+    });
+
     const payload: Record<string, unknown> = {};
 
     // Phase 9 mock LLM adapter: fills only unresolved required fields.
@@ -23,10 +31,18 @@ export class PayloadBuilderLlmClient {
       this.assignPath(payload, fieldPath, value);
     }
 
-    return {
+    const result = {
       payload,
       model: 'mock-schema-assist-v1',
     };
+
+    logger.info('LLM payload build completed', {
+      model: result.model,
+      filledFieldCount: Object.keys(payload).length,
+      durationMs: Date.now() - startedAt,
+    });
+
+    return result;
   }
 
   private pickHintValue(fieldPath: string, hints?: Record<string, string>): string {

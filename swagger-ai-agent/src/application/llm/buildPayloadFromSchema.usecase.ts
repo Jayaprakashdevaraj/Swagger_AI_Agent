@@ -2,6 +2,7 @@ import { ValidationError } from '../../core/errors/ValidationError';
 import { Operation } from '../../domain/models/Operation';
 import { SpecRepository } from '../../domain/repositories/SpecRepository';
 import { PayloadBuilderLlmClient } from '../../infrastructure/llm/PayloadBuilderLlmClient';
+import { logger } from '../../infrastructure/logging/Logger';
 
 export type PayloadBuildMode = 'schema-only' | 'schema-with-llm';
 
@@ -31,6 +32,13 @@ export class BuildPayloadFromSchemaUseCase {
 
   async execute(input: BuildPayloadFromSchemaInput): Promise<BuildPayloadFromSchemaOutput> {
     const mode: PayloadBuildMode = input.mode ?? 'schema-only';
+    const startedAt = Date.now();
+
+    logger.info('Payload build started', {
+      specId: input.specId,
+      operationId: input.operationId,
+      mode,
+    });
 
     const spec = await this.specRepository.findById(input.specId);
     if (!spec) {
@@ -83,6 +91,11 @@ export class BuildPayloadFromSchemaUseCase {
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown LLM error';
         warnings.push(`LLM payload assist unavailable: ${message}`);
+        logger.warn('Payload build LLM assist failed', {
+          specId: input.specId,
+          operationId: input.operationId,
+          message,
+        });
       }
     }
 
@@ -90,7 +103,7 @@ export class BuildPayloadFromSchemaUseCase {
       warnings.push('Some required fields were unresolved from schema/examples only');
     }
 
-    return {
+    const output = {
       specId: input.specId,
       operationId: operation.id,
       mode,
@@ -100,6 +113,17 @@ export class BuildPayloadFromSchemaUseCase {
       llmModel,
       warnings,
     };
+
+    logger.info('Payload build completed', {
+      specId: input.specId,
+      operationId: operation.id,
+      mode,
+      llmUsed,
+      missingRequiredCount: missingRequiredFields.length,
+      durationMs: Date.now() - startedAt,
+    });
+
+    return output;
   }
 
   private payloadFromExamples(operation: Operation): Record<string, unknown> | undefined {

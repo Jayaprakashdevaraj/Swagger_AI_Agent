@@ -7,6 +7,7 @@ import { EnvironmentRepository } from '../../domain/repositories/EnvironmentRepo
 import { RunPlanRepository } from '../../domain/repositories/RunPlanRepository';
 import { SpecRepository } from '../../domain/repositories/SpecRepository';
 import { AxiosExecutionAdapter } from '../../infrastructure/http/AxiosExecutionAdapter';
+import { logger } from '../../infrastructure/logging/Logger';
 import { PlanRunUseCase } from './planRun.usecase';
 
 export interface ExecuteRunInput {
@@ -38,6 +39,7 @@ export class ExecuteRunUseCase {
   ) {}
 
   async execute(input: ExecuteRunInput): Promise<ExecuteRunOutput> {
+    const startedAt = Date.now();
     let runId = input.runId;
 
     if (!runId) {
@@ -62,6 +64,13 @@ export class ExecuteRunUseCase {
     if (!runPlan) {
       throw new ValidationError('Run plan not found', [{ field: 'runId', message: `Run plan not found: ${runId}` }]);
     }
+
+    logger.info('Execution started', {
+      runId,
+      specId: runPlan.specId,
+      envName: runPlan.envName,
+      testCount: runPlan.testCaseDefinitions.length,
+    });
 
     const spec = await this.specRepository.findById(runPlan.specId);
     if (!spec) {
@@ -172,6 +181,16 @@ export class ExecuteRunUseCase {
     runPlan.status = summary.errors > 0 || summary.failed > 0 ? 'failed' : 'completed';
     runPlan.completedAt = report.completedAt;
     await this.runPlanRepository.updatePlan(runPlan);
+
+    logger.info('Execution completed', {
+      runId,
+      status: runPlan.status,
+      total: summary.total,
+      passed: summary.passed,
+      failed: summary.failed,
+      errors: summary.errors,
+      durationMs: Date.now() - startedAt,
+    });
 
     return {
       runId,

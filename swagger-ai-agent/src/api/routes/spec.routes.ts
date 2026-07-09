@@ -12,9 +12,10 @@ import { GetSpecMetadataUseCase } from '../../application/spec/getSpecMetadata.u
 import { ListOperationsUseCase } from '../../application/spec/listOperations.usecase';
 import { ListTagsUseCase } from '../../application/spec/listTags.usecase';
 import { repositoryRegistry } from '../../infrastructure/persistence/RepositoryRegistry';
+import { config } from '../../core/config';
 
 const specRepository = repositoryRegistry.specRepository;
-const swaggerLoader = new SwaggerLoader();
+const swaggerLoader = new SwaggerLoader(config.http.specMaxSizeMb * 1024 * 1024);
 const swaggerParserAdapter = new SwaggerParserAdapter();
 const openApiNormalizer = new OpenApiNormalizer();
 
