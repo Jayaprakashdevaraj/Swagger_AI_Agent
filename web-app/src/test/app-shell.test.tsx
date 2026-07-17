@@ -11,7 +11,7 @@ describe('Phase 1 app shell', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('Business analyst dashboard shell')).toBeInTheDocument()
+    expect(screen.getByText('Business analyst dashboard')).toBeInTheDocument()
     expect(screen.getByText('Specifications')).toBeInTheDocument()
   })
 })

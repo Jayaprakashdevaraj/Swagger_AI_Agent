@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import type { OperationSummary } from '@/types/spec.types'
 import { OperationCard } from './OperationCard'
+import { PayloadBuilderModal } from '@/components/features/testgen/PayloadBuilderModal'
 
 interface OperationListProps {
   specId: string
@@ -17,6 +18,7 @@ export function OperationList({ specId, operations }: OperationListProps) {
   const [search, setSearch] = useState('')
   const [method, setMethod] = useState('all')
   const [tag, setTag] = useState('all')
+  const [activePayloadOperation, setActivePayloadOperation] = useState<OperationSummary | null>(null)
 
   const tags = useMemo(() => {
     const values = new Set<string>()
@@ -74,6 +76,7 @@ export function OperationList({ specId, operations }: OperationListProps) {
                 <td className="px-5 py-4">
                   <div className="flex gap-2">
                     <Button variant="outline" onClick={() => navigate('/execution', { state: { specId, operationId: operation.operationId } })}>Execute</Button>
+                    <Button variant="outline" onClick={() => setActivePayloadOperation(operation)}>Payload</Button>
                     <Button variant="ghost" onClick={() => navigate('/test-generation', { state: { specId, operationId: operation.operationId } })}>Generate Test</Button>
                   </div>
                 </td>
@@ -85,9 +88,25 @@ export function OperationList({ specId, operations }: OperationListProps) {
 
       <div className="space-y-3 md:hidden">
         {filteredOperations.map((operation) => (
-          <OperationCard key={operation.operationId} operation={operation} />
+          <OperationCard
+            key={operation.operationId}
+            operation={operation}
+            onGeneratePayload={() => setActivePayloadOperation(operation)}
+          />
         ))}
       </div>
+
+      {activePayloadOperation && (
+        <PayloadBuilderModal
+          open={!!activePayloadOperation}
+          onClose={() => setActivePayloadOperation(null)}
+          specId={specId}
+          operationId={activePayloadOperation.operationId}
+          method={activePayloadOperation.method}
+          path={activePayloadOperation.path}
+          summary={activePayloadOperation.summary}
+        />
+      )}
 
       {filteredOperations.length === 0 ? (
         <Card className="p-6 text-sm text-slate-500">No operations matched the current filters.</Card>

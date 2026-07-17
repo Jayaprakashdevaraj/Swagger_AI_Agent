@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import type { OperationSummary } from '@/types/spec.types'
 
-export function OperationCard({ operation }: { operation: OperationSummary }) {
+export function OperationCard({ operation, onGeneratePayload }: { operation: OperationSummary; onGeneratePayload?: () => void }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -24,6 +24,11 @@ export function OperationCard({ operation }: { operation: OperationSummary }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {onGeneratePayload ? (
+            <Button variant="outline" onClick={onGeneratePayload} className="text-xs">
+              Payload
+            </Button>
+          ) : null}
           <Button variant="outline" onClick={() => setExpanded((value) => !value)}>
             {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             Details
