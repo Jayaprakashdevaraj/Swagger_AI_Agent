@@ -11,6 +11,8 @@ import { ValidateSpecUseCase } from '../../application/spec/validateSpec.usecase
 import { GetSpecMetadataUseCase } from '../../application/spec/getSpecMetadata.usecase';
 import { ListOperationsUseCase } from '../../application/spec/listOperations.usecase';
 import { ListTagsUseCase } from '../../application/spec/listTags.usecase';
+import { ListSpecsUseCase } from '../../application/spec/listSpecs.usecase';
+import { DeleteSpecUseCase } from '../../application/spec/deleteSpec.usecase';
 import { repositoryRegistry } from '../../infrastructure/persistence/RepositoryRegistry';
 import { config } from '../../core/config';
 
@@ -27,20 +29,25 @@ const ingestSwaggerUseCase = new IngestSwaggerUseCase(
   specRepository
 );
 const validateSpecUseCase = new ValidateSpecUseCase(specRepository, swaggerParserAdapter);
+const listSpecsUseCase = new ListSpecsUseCase(specRepository);
 const getSpecMetadataUseCase = new GetSpecMetadataUseCase(specRepository);
 const listOperationsUseCase = new ListOperationsUseCase(specRepository);
 const listTagsUseCase = new ListTagsUseCase(specRepository);
+const deleteSpecUseCase = new DeleteSpecUseCase(specRepository);
 
 const specController = new SpecController(
   ingestSwaggerUseCase,
   validateSpecUseCase,
+  listSpecsUseCase,
   getSpecMetadataUseCase,
   listOperationsUseCase,
-  listTagsUseCase
+  listTagsUseCase,
+  deleteSpecUseCase
 );
 
 const router = Router();
 
+router.get('/', specController.listSpecs);
 router.post('/import', validateRequest(validateImportSpecRequest), specController.importSpec);
 router.post('/validate', validateRequest(validateSpecValidateRequest), specController.validateSpec);
 router.get('/validate', (_req, res) => {
@@ -54,6 +61,7 @@ router.get('/validate', (_req, res) => {
 });
 router.get('/:specId/operations', specController.getOperations);
 router.get('/:specId/tags', specController.getTags);
+router.delete('/:specId', specController.deleteSpec);
 router.get('/:specId', specController.getSpec);
 
 export { router as specRouter };

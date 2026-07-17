@@ -5,6 +5,8 @@ import { NormalizeSpecUseCase } from '../../application/spec/normalizeSpec.useca
 import { IngestSwaggerUseCase } from '../../application/spec/ingestSwagger.usecase';
 import { ListOperationsUseCase } from '../../application/spec/listOperations.usecase';
 import { ValidateSpecUseCase } from '../../application/spec/validateSpec.usecase';
+import { ListSpecsUseCase } from '../../application/spec/listSpecs.usecase';
+import { DeleteSpecUseCase } from '../../application/spec/deleteSpec.usecase';
 
 class MockSwaggerLoader {
   constructor(private readonly content: string) {}
@@ -61,6 +63,23 @@ describe('Phase 4 spec ingestion + normalization', () => {
     expect(stored).toBeDefined();
   });
 
+  it('should ingest inline spec content for browser uploads', async () => {
+    const repository = new InMemorySpecRepository();
+    const loader = new MockSwaggerLoader(sampleOpenApi) as unknown as any;
+    const parser = new SwaggerParserAdapter();
+    const normalizer = new OpenApiNormalizer();
+    const normalizeUseCase = new NormalizeSpecUseCase(normalizer);
+
+    const ingestUseCase = new IngestSwaggerUseCase(loader, parser, normalizeUseCase, repository);
+    const result = await ingestUseCase.execute({
+      source: { type: 'content', content: sampleOpenApi, fileName: 'browser-upload.yaml' },
+    });
+
+    expect(result.id.startsWith('spec-')).toBe(true);
+    expect(result.sourceRef).toBe('browser-upload.yaml');
+    expect(result.operations).toHaveLength(1);
+  });
+
   it('should list operations for a stored spec', async () => {
     const repository = new InMemorySpecRepository();
     const parser = new SwaggerParserAdapter();
@@ -85,5 +104,43 @@ describe('Phase 4 spec ingestion + normalization', () => {
     const output = await useCase.execute({ rawContent: sampleOpenApi });
     expect(output.valid).toBe(true);
     expect(output.issues).toHaveLength(0);
+  });
+
+  it('should list ingested specs in reverse ingest order', async () => {
+    const repository = new InMemorySpecRepository();
+    const parser = new SwaggerParserAdapter();
+    const normalizer = new OpenApiNormalizer();
+
+    const parsed = await parser.parse(sampleOpenApi, true);
+    const older = normalizer.normalize(parsed.raw, 'spec-older', 'older');
+    older.ingestedAt = '2025-01-01T00:00:00.000Z';
+    const newer = normalizer.normalize(parsed.raw, 'spec-newer', 'newer');
+    newer.ingestedAt = '2025-01-02T00:00:00.000Z';
+
+    await repository.save(older);
+    await repository.save(newer);
+
+    const listSpecsUseCase = new ListSpecsUseCase(repository);
+    const specs = await listSpecsUseCase.execute();
+
+    expect(specs).toHaveLength(2);
+    expect(specs[0].id).toBe('spec-newer');
+    expect(specs[0].tagNames).toContain('Customers');
+    expect(specs[1].id).toBe('spec-older');
+  });
+
+  it('should delete a stored spec', async () => {
+    const repository = new InMemorySpecRepository();
+    const parser = new SwaggerParserAdapter();
+    const normalizer = new OpenApiNormalizer();
+
+    const parsed = await parser.parse(sampleOpenApi, true);
+    const normalized = normalizer.normalize(parsed.raw, 'spec-delete', 'unit-test');
+    await repository.save(normalized);
+
+    const deleteSpecUseCase = new DeleteSpecUseCase(repository);
+    await deleteSpecUseCase.execute('spec-delete');
+
+    await expect(repository.findById('spec-delete')).resolves.toBeUndefined();
   });
 });

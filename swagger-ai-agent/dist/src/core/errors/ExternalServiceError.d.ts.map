@@ -1,0 +1,1 @@
+{"version":3,"file":"ExternalServiceError.d.ts","sourceRoot":"","sources":["../../../../src/core/errors/ExternalServiceError.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AAEtC,qBAAa,oBAAqB,SAAQ,QAAQ;IAChD,SAAgB,OAAO,EAAE,MAAM,CAAC;gBAEpB,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,EAAE,KAAK,CAAC,EAAE,KAAK;CAO5D"}

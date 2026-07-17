@@ -19,8 +19,8 @@ export function validateImportSpecRequest(body: unknown): ValidationIssue[] {
 
   const typedSource = source as unknown as ImportSpecRequestDto['source'];
 
-  if (!typedSource.type || !['url', 'file', 'git'].includes(typedSource.type)) {
-    issues.push({ field: 'source.type', message: 'source.type must be one of: url, file, git' });
+  if (!typedSource.type || !['url', 'file', 'git', 'content'].includes(typedSource.type)) {
+    issues.push({ field: 'source.type', message: 'source.type must be one of: url, file, git, content' });
     return issues;
   }
 
@@ -45,6 +45,12 @@ export function validateImportSpecRequest(body: unknown): ValidationIssue[] {
     }
     if (!('filePath' in typedSource) || typeof typedSource.filePath !== 'string' || typedSource.filePath.trim() === '') {
       issues.push({ field: 'source.filePath', message: 'source.filePath is required for type=git' });
+    }
+  }
+
+  if (typedSource.type === 'content') {
+    if (!('content' in typedSource) || typeof typedSource.content !== 'string' || typedSource.content.trim() === '') {
+      issues.push({ field: 'source.content', message: 'source.content is required for type=content' });
     }
   }
 

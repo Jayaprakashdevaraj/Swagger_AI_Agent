@@ -17,7 +17,13 @@ export interface GitSpecSourceDto {
   filePath: string;
 }
 
-export type SpecSourceDto = UrlSpecSourceDto | FileSpecSourceDto | GitSpecSourceDto;
+export interface ContentSpecSourceDto {
+  type: 'content';
+  content: string;
+  fileName?: string;
+}
+
+export type SpecSourceDto = UrlSpecSourceDto | FileSpecSourceDto | GitSpecSourceDto | ContentSpecSourceDto;
 
 export interface ImportSpecRequestDto {
   source: SpecSourceDto;
@@ -28,6 +34,17 @@ export interface ImportSpecResponseDto {
   title: string;
   version: string;
   operationCount: number;
+}
+
+export interface SpecSummaryDto {
+  id: string;
+  title: string;
+  version: string;
+  specVersion: string;
+  operationCount: number;
+  tagNames: string[];
+  ingestedAt: string;
+  sourceRef: string;
 }
 
 export interface ValidateSpecRequestDto {

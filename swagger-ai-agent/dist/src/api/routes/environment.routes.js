@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.environmentRouter = void 0;
+const express_1 = require("express");
+const RepositoryRegistry_1 = require("../../infrastructure/persistence/RepositoryRegistry");
+const createEnvironment_usecase_1 = require("../../application/environment/createEnvironment.usecase");
+const listEnvironments_usecase_1 = require("../../application/environment/listEnvironments.usecase");
+const updateEnvironment_usecase_1 = require("../../application/environment/updateEnvironment.usecase");
+const deleteEnvironment_usecase_1 = require("../../application/environment/deleteEnvironment.usecase");
+const environment_controller_1 = require("../controllers/environment.controller");
+const validateRequest_1 = require("../../core/middlewares/validateRequest");
+const environment_validator_1 = require("../validators/environment.validator");
+const createEnvironmentUseCase = new createEnvironment_usecase_1.CreateEnvironmentUseCase(RepositoryRegistry_1.repositoryRegistry.environmentRepository, RepositoryRegistry_1.repositoryRegistry.specRepository);
+const listEnvironmentsUseCase = new listEnvironments_usecase_1.ListEnvironmentsUseCase(RepositoryRegistry_1.repositoryRegistry.environmentRepository, RepositoryRegistry_1.repositoryRegistry.specRepository);
+const updateEnvironmentUseCase = new updateEnvironment_usecase_1.UpdateEnvironmentUseCase(RepositoryRegistry_1.repositoryRegistry.environmentRepository);
+const deleteEnvironmentUseCase = new deleteEnvironment_usecase_1.DeleteEnvironmentUseCase(RepositoryRegistry_1.repositoryRegistry.environmentRepository);
+const environmentController = new environment_controller_1.EnvironmentController(createEnvironmentUseCase, listEnvironmentsUseCase, updateEnvironmentUseCase, deleteEnvironmentUseCase, RepositoryRegistry_1.repositoryRegistry.environmentRepository);
+const router = (0, express_1.Router)();
+exports.environmentRouter = router;
+router.post('/environment', (0, validateRequest_1.validateRequest)(environment_validator_1.validateCreateEnvironmentRequest), environmentController.createEnvironment);
+router.get('/spec/:specId/environments', environmentController.listEnvironmentsBySpec);
+router.get('/environment/:envId', environmentController.getEnvironmentById);
+router.put('/environment/:envId', (0, validateRequest_1.validateRequest)(environment_validator_1.validateUpdateEnvironmentRequest), environmentController.updateEnvironment);
+router.delete('/environment/:envId', environmentController.deleteEnvironment);
+//# sourceMappingURL=environment.routes.js.map

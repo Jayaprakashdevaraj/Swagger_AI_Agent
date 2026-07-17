@@ -9,7 +9,8 @@ import { logger } from '../../infrastructure/logging/Logger';
 export type SpecSource =
   | { type: 'url'; url: string }
   | { type: 'file'; path: string }
-  | { type: 'git'; repo: string; ref: string; filePath: string };
+  | { type: 'git'; repo: string; ref: string; filePath: string }
+  | { type: 'content'; content: string; fileName?: string };
 
 export interface IngestSwaggerInput {
   source: SpecSource;
@@ -70,6 +71,10 @@ export class IngestSwaggerUseCase {
       return this.loader.loadFromFile(source.path);
     }
 
+    if (source.type === 'content') {
+      return source.content;
+    }
+
     return this.loader.loadFromGit({
       repo: source.repo,
       ref: source.ref,
@@ -83,6 +88,9 @@ export class IngestSwaggerUseCase {
     }
     if (source.type === 'file') {
       return source.path;
+    }
+    if (source.type === 'content') {
+      return source.fileName?.trim() || 'inline-content';
     }
     return `${source.repo}#${source.ref}:${source.filePath}`;
   }

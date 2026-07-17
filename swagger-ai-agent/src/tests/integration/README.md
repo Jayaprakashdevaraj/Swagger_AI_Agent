@@ -1,0 +1,1 @@
+Reserved for integration tests that exercise the HTTP API and infrastructure adapters end to end.

@@ -1,0 +1,1 @@
+{"version":3,"file":"genericMcp.controller.d.ts","sourceRoot":"","sources":["../../../../../src/api/controllers/mcp/genericMcp.controller.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAE1D,qBAAa,oBAAoB;IAC/B,iBAAiB,GAAU,KAAK,OAAO,EAAE,KAAK,QAAQ,EAAE,MAAM,YAAY,KAAG,OAAO,CAAC,IAAI,CAAC,CAcxF;CACH"}

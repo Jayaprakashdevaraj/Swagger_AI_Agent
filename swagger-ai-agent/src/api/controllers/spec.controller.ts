@@ -5,9 +5,12 @@ import { ValidateSpecUseCase } from '../../application/spec/validateSpec.usecase
 import { GetSpecMetadataUseCase } from '../../application/spec/getSpecMetadata.usecase';
 import { ListOperationsUseCase } from '../../application/spec/listOperations.usecase';
 import { ListTagsUseCase } from '../../application/spec/listTags.usecase';
+import { ListSpecsUseCase } from '../../application/spec/listSpecs.usecase';
+import { DeleteSpecUseCase } from '../../application/spec/deleteSpec.usecase';
 import {
   ImportSpecRequestDto,
   ImportSpecResponseDto,
+  SpecSummaryDto,
   ValidateSpecRequestDto,
   ValidateSpecResponseDto,
 } from '../dto/spec.dto';
@@ -16,10 +19,32 @@ export class SpecController {
   constructor(
     private readonly ingestSwaggerUseCase: IngestSwaggerUseCase,
     private readonly validateSpecUseCase: ValidateSpecUseCase,
+    private readonly listSpecsUseCase: ListSpecsUseCase,
     private readonly getSpecMetadataUseCase: GetSpecMetadataUseCase,
     private readonly listOperationsUseCase: ListOperationsUseCase,
-    private readonly listTagsUseCase: ListTagsUseCase
+    private readonly listTagsUseCase: ListTagsUseCase,
+    private readonly deleteSpecUseCase: DeleteSpecUseCase
   ) {}
+
+  listSpecs = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const specs = await this.listSpecsUseCase.execute();
+      const response: SpecSummaryDto[] = specs.map((spec) => ({
+        id: spec.id,
+        title: spec.title,
+        version: spec.version,
+        specVersion: spec.specVersion,
+        operationCount: spec.operationCount,
+        tagNames: spec.tagNames,
+        ingestedAt: spec.ingestedAt,
+        sourceRef: spec.sourceRef,
+      }));
+
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
 
   importSpec = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -95,6 +120,20 @@ export class SpecController {
 
       const tags = await this.listTagsUseCase.execute(specId);
       res.status(200).json(tags);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deleteSpec = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const specId = req.params.specId;
+      if (!specId) {
+        throw new ValidationError('specId is required', [{ field: 'specId', message: 'Path param specId is required' }]);
+      }
+
+      await this.deleteSpecUseCase.execute(specId);
+      res.status(204).send();
     } catch (error) {
       next(error);
     }
